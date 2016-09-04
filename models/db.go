@@ -6,6 +6,7 @@ import (
 )
 
 type Datastore interface {
+	StoreNotification(*Notification) (bool, error)
 }
 
 type DB struct {

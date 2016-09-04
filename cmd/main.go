@@ -58,46 +58,12 @@ func main() {
 			if err != nil {
 				log.Panic(err)
 			}
-			fmt.Printf("%+v\n", match)
-			/*forecast := &matcher.Forecast{}
-			err := proto.Unmarshal(f.Body, forecast)
+			not := models.NewNotification(*match.User.Email, *match.Location.Name, *match.WaveHeightM, *match.Time)
+			fmt.Printf("%+v\n", not)
+			_, err = db.StoreNotification(not)
 			if err != nil {
 				log.Panic(err)
 			}
-			log.Printf("%s", forecast)
-			matches, err := env.db.MatchUsers(forecast)
-			if err != nil {
-				log.Panic(err)
-			}
-			for _, match := range matches {
-				user := matcher.Match_User{
-					Id:       &match.User.Id,
-					Username: &match.User.Username,
-					Name:     &match.User.Name,
-					Surname:  &match.User.Surname,
-					Email:    &match.User.Email,
-				}
-				loc := matcher.Match_Location{
-					Id:   &match.Location.Id,
-					Name: &match.Location.Name,
-				}
-				time := int64(match.Time.UnixNano())
-				msg := matcher.Match{
-					User:        &user,
-					Location:    &loc,
-					WaveHeightM: &match.WaveHeightM,
-					Time:        &time,
-				}
-				fmt.Printf(" * Match: %v @ %v [wave height: %v m, time: %v]\n", match.User.Username, match.Location.Id, match.WaveHeightM, match.Time)
-				bytes, err := proto.Marshal(&msg)
-				if err != nil {
-					log.Panic(err)
-				}
-				err = prod.Send("ridenow.users.match", bytes)
-				if err != nil {
-					log.Panic(err)
-				}
-			}*/
 		}
 	}()
 	log.Printf(" [*] Running `notifier` service . To exit press CTRL+C")
